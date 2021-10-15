@@ -1,44 +1,64 @@
-
-
+//Voci mon object dans un variable global (non recomendée)
 var game = {
-  // On recupere la saisi de l'utilisateur avec le promp et on le met dans la variable (propriete)nombre recherche. On transforme la saisie en nombre avec parseInt
-  numberSearched: parseInt(prompt("Quel est le nombre a trouver entre 0 et 500 ?"), 10),
-  tryNumber : 1,
-  minNumber:0,
-  maxNumber:200,
+  searchedNumber: null,
+  attemps: null,
+  minValue: 0,
+  maxValue: 100,
+  score: [],
 };
 
-function randomNumber(max) {
+// Voici ma function pour recuperer un nombre aleatoire
+function generateRandomValue(min, max) {
   // On recupére un nombre aleatoire t on l'stock dans la variable solution
-  return Math.round(Math.random() * max)
+  min = Math.ceil(min);
+  max = Math.floor(max) + 1;
+  return Math.floor(Math.random() * (max - min)) + min;
 }
-var solution = randomNumber(game.maxNumber)
-console.log(solution);
 
-function play(reponse, compteur) {
-    // tant que la proposition et fause on le permet de reproposer un nouveu nombre != c'est l'inverse de === prend en compte le type de la valeur
-    // (proposition !== randomNumber) sera true si c'est different et false si c'est egal
-    // (proposition === randomNumber) sera false si c'est different et true si c'est egal
-    while (reponse != solution) {
-      if (reponse < solution) {
-        // on ecrase la reponse initial
-        reponse = prompt("trop petit, veuillez rééssayer");
-      } else {
-        // on ecrase la reponse
-        reponse = prompt("trop grand, veuillez rééssayer");
-      }
-      // on peut mettre le compteur dans le if et le else (conditions et deux fois) mais pour l'ecrire une seule fois on le mets dans la boucle while
-      compteur++;
+// Voici ma function play lance le jeux
+function play() {
+  game.searchedNumber = generateRandomValue(game.minValue, game.maxValue);
+  console.log("number searched is:" + game.searchedNumber);
+  var enteredNumber = parseInt(prompt("Quel est le nombre à trouver ?"));
+
+  // le nombre d'essais apres var enteredNumber c'est 1
+  game.attemps = 1;
+  // tant que la proposition et fause on le permet de reproposer un nouveu nombre != c'est l'inverse de === prend en compte le type de la valeur
+  // (proposition !== randomNumber) sera true si c'est different et false si c'est egal
+  // (proposition === randomNumber) sera false si c'est different et true si c'est egal
+  while (enteredNumber != game.searchedNumber) {
+    if (enteredNumber < game.searchedNumber) {
+      // on ecrase la reponse initial
+      enteredNumber = prompt("trop petit, veuillez rééssayer");
+    } else {
+      // on ecrase la reponse
+      enteredNumber = prompt("trop grand, veuillez rééssayer");
     }
-  
-    // Si on sors de la boucle on sait qu'on est trouve le bon nombre et l'alert se declonche
-    alert("Vous avez gagné en " + compteur + " essais!!"); // Il sors de la
+    // on peut mettre le compteur dans le if et le else (conditions et deux fois) mais pour l'ecrire une seule fois on le mets dans la boucle while
+    // compteur++;
+    game.attemps += 1;
   }
-  
-  do { // d'abord execute l'action (function play();), c'est un block de instructions
-      play(game.numberSearched, game.tryNumber);
-  } while (confirm("Désirez-vous rejouer ? ")); // fait la condition repetitive, TANT qu'il est true il va executer do play() et quand il sera false il va sortir de la boucle.
-  
-  
-  
-  
+
+  // Si on sors de la boucle on sait qu'on est trouve le bon nombre et l'alert se declonche
+  alert("Vous avez gagné en " + game.attemps + " essais!!"); // Il sors de la
+  // on push dnas le tableau chaque fois qu'il gagne
+  game.score.push(game.attemps);
+  console.log(game.score, typeof game.score);
+}
+
+do {
+  // d'abord execute l'action (function play();), c'est un block de instructions, on est sure que la boucl e sera execute a moins une fois
+
+  play();
+} while (confirm("Désirez-vous rejouer ? ")); // fait la condition repetitive, TANT qu'il est true il va executer do play() et quand il sera false il va sortir de la boucle.
+
+// Pour parcourir notre tableau on va utiliser la boucle for
+for (var scoreIndex = 0; scoreIndex < game.score.length; scoreIndex++) {
+  console.log(
+    "Partie, ",
+    scoreIndex + 1,
+    " : ",
+    game.score[scoreIndex],
+    "essais"
+  );
+}
