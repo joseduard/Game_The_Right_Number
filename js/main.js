@@ -9,14 +9,16 @@ var game = {
   maxValue: 100,
   score: [],
 };
-console.log("Je suis la #1", game)
+console.log("1- Je suis juste avant la function generateRandomValue ", game);
+
 // Voici ma function pour recuperer un nombre aleatoire. Elle est déclanché et utilise dans la function play()
 function generateRandomValue(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max) + 1;
   return Math.floor(Math.random() * (max - min)) + min;
 }
-console.log("Je suis la #2" + generateRandomValue)
+console.log("2 Je suis la, j'ai viens de generer mon nombre aleatoire" + generateRandomValue);
+
 // Voici ma function play qui lance le jeux
 // game.serchedNumber ajoute dans l'object game la valeur de le resultat ou return de la function generateRandomValue
 // var enteredNumber va stocker la reponse d'utilisateur a la question " Quel est le nombre à trouver"
@@ -24,35 +26,47 @@ function play() {
   game.searchedNumber = generateRandomValue(game.minValue, game.maxValue);
   console.log("number searched is:" + game.searchedNumber);
   var enteredNumber = parseInt(prompt("Quel est le nombre à trouver ?"));
-  console.log("Je suis la #3", enteredNumber)
+  console.log("3 J'ai vien de poser la question et la reponse d'utilisateur c'est: ", enteredNumber)
   // On va ajouter la valeur 1 à la propriete attemps, il est comme notre conteur, il commence en 1
   game.attemps = 1;
+  console.log("4 je viens de ajouter la valeur 1 dans la propriete attemps du objet game, donc la valeur au depart c'est " + game.attemps)
   // tant que la proposition et fause on le permet de reproposer un nouveu nombre != c'est l'inverse de === prend en compte le type de la valeur
   // (proposition !== randomNumber) sera true si c'est different et false si c'est egal
   // (proposition === randomNumber) sera false si c'est different et true si c'est egal
-  // Ici c'est comment dire "si le nombre choisi es different au nombre aleatoire" c'est true on passe dans le if
-  while (enteredNumber != game.searchedNumber) {
+  // Ici c'est comment dire "si le nombre choisi ou saisi pour l'utilisateur es different au nombre aleatoire et que la saisi n'est pas null "anuler" on passe dans la condition" si c'est true on passe dans le if
+  // Seulement ça: Number.isNaN(enteredNumber) nous donne true ou false donc !Number.isNaN(enteredNumber) c'est la negation
+  while (enteredNumber !== game.searchedNumber && ! Number.isNaN(enteredNumber)) {
     if (enteredNumber < game.searchedNumber) {
       // on ecrase la reponse initial
-      enteredNumber = prompt("trop petit, veuillez rééssayer");
+      enteredNumber = parseInt(prompt("trop petit, veuillez rééssayer"));
     } else {
       // on ecrase la reponse
-      enteredNumber = prompt("trop grand, veuillez rééssayer");
+      enteredNumber = parseInt(prompt("trop grand, veuillez rééssayer"));
     }
     // on peut mettre le compteur dans le if et le else (conditions et deux fois) mais pour l'ecrire une seule fois on le mets dans la boucle while
     // compteur++;
-    // game.attemps += 1 va ajouter 1 et stocker la valeur dernier chaque boucle ou chaque essai
+    // game.attemps += 1 va ajouter 1 et stocker la valeur dernier chaque boucle ou chaque essai, on incremente le nombre de essais
     game.attemps += 1;
+    console.log("J'ai fait un tour de la boucle, la valeur de attemps maintenant c'est: " + game.attemps);
   }
-  console.log("Je suis la #4", game.attemps)
+
+  console.log("5 J'ai sorti de la boucle car maintenant je vas faire la condition pour dire abandon ou dire gagne");
+  if (Number.isNaN(enteredNumber)) {
+    game.attemps = 'Abandon';
+    console.log("6 J'ai ajoute 'abandon' dans attemps, neuveau valeu: " + game.attemps)
+  } else {
+  console.log("7 Je suis dans l'alert gagné et la valeur des attemps est : ", game.attemps)
   // Si on sors de la boucle on sait qu'on est trouve le bon nombre et l'alert se declanche
   // game.attemps equivaut au numero d'essais apres avoir sorti de la boucle while
   alert("Vous avez gagné en " + game.attemps + " essais!!"); // Il sors de la
+  }
   // on push dans le tableau score qui est dans e object game chaque fois qu'il gagne
   game.score.push(game.attemps);
-  console.log( "on vien de faire le push",game.score, typeof game.score);
+
+  console.log( "on vien de faire le push des attemps dans le tableau la valeur de score est",game.score, typeof game.score);
 }
-console.log("je suis la avant le do #5")
+
+console.log("je suis juste avant d'executer la function pour la premier fois do{}")
 do {
   // d'abord execute l'action (function play();), c'est un block de instructions, on est sure que la boucl e sera execute a moins une fois
   play();
@@ -60,15 +74,11 @@ do {
 console.log("je suis la j'ai sortie de la boucle 6")
 // Pour parcourir notre tableau on va utiliser la boucle for
 for (var scoreIndex = 0; scoreIndex < game.score.length; scoreIndex++) {
-  console.log(
-    "Partie, qui corresponde au index+1 ",
-    // on met +1 car la partir commence en 1
-    scoreIndex + 1,
-    " : ",
-    // game score va stocker les valeurs dans le tableau chaque valeur avec un index
-    // dans scoreIndex sont parcouru chaque valeur du tableau selon l'ordre du index
-    game.score[scoreIndex],
-    "essais qui correspondent au valeurs du tableau score"
-    
-  );
+  var message = 'Partie ' + (scoreIndex + 1) + " : ";
+  if (game.score[scoreIndex] === 'Abandon') {
+    message += 'Abandonnée';
+  }else{
+    message += game.score[scoreIndex] + ' essais';
+  }
+  console.log(message);
 }
