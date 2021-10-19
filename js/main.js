@@ -72,13 +72,28 @@ do {
   play();
 } while (confirm("Désirez-vous rejouer ? ")); // fait la condition repetitive, TANT qu'il est true il va executer do play() et quand il sera false il va sortir de la boucle.
 console.log("je suis la j'ai sortie de la boucle 6")
+
+var resultTable = '';
+resultTable += '<table>';
+resultTable += '<tr>';
+resultTable += '<th>Partie</th>';
+resultTable += "<th>Nombre d'essais</th>";
+resultTable += '</tr>';
 // Pour parcourir notre tableau on va utiliser la boucle for
 for (var scoreIndex = 0; scoreIndex < game.score.length; scoreIndex++) {
-  var message = 'Partie ' + (scoreIndex + 1) + " : ";
+
+  resultTable += '<tr>'
+
+  resultTable += '<td>' + (scoreIndex + 1) + '</td>';
   if (game.score[scoreIndex] === 'Abandon') {
-    message += 'Abandonnée';
+    resultTable += '<td>Abandonnée</td>';
   }else{
-    message += game.score[scoreIndex] + ' essais';
+    resultTable += '<td>' + game.score[scoreIndex] + ' essais</td>';
   }
-  console.log(message);
+  resultTable += '</tr>'
+  
 }
+
+resultTable += '</table>';
+// a la place de createElement on utilise innerHtml pour aficher les balises de tableau en html
+document.body.innerHTML = resultTable;
